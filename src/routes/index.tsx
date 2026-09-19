@@ -138,23 +138,23 @@ function Index() {
 
       {/* Collection */}
       <section id="collection" className="border-t border-border">
-        <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
-          <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div className="mx-auto max-w-7xl px-3 sm:px-5 py-12 sm:py-16 lg:px-8 lg:py-24">
+          <div className="mb-8 sm:mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
                 La collection
               </p>
-              <h2 className="mt-3 font-display text-4xl md:text-5xl">
+              <h2 className="mt-2 sm:mt-3 font-display text-3xl sm:text-4xl md:text-5xl">
                 La sélection KAG
               </h2>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {filters.map((f) => (
                 <Button
                   variant={f === filter ? "default" : "outline"}
                   key={f}
                   onClick={() => setFilter(f)}
-                  className="h-9 rounded-none px-5 text-[12px] uppercase tracking-[0.08em]"
+                  className="h-8 sm:h-9 rounded-none px-3 sm:px-5 text-[11px] sm:text-[12px] uppercase tracking-[0.08em]"
                 >
                   {f}
                 </Button>
@@ -167,7 +167,7 @@ function Index() {
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-900 border-t-transparent"></div>
             </div>
           ) : visible.length > 0 ? (
-            <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-x-2.5 gap-y-5 sm:gap-x-6 sm:gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {visible.map((p, index) => (
                 <ProductCard key={p.id} product={p} priority={index < 2} />
               ))}

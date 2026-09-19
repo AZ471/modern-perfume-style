@@ -156,9 +156,9 @@ function ProductPage() {
           </div>
         </div>
 
-        <section className="mt-24">
-          <h2 className="font-display text-3xl">Vous aimerez aussi</h2>
-          <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-16 sm:mt-24">
+          <h2 className="font-display text-2xl sm:text-3xl">Vous aimerez aussi</h2>
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-x-2.5 gap-y-5 sm:gap-x-6 sm:gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {others.map((p: any) => (
               <ProductCard key={p.id} product={p} />
             ))}
