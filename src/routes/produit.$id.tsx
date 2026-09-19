@@ -1,17 +1,46 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { products, formatPrice } from "@/data/products";
+import { formatPrice } from "@/data/products";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { useCart } from "@/lib/cart";
 import { ArrowLeft, ShoppingBag, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/produit/$id")({
-  loader: ({ params }) => {
-    const product = products.find((p) => p.id === params.id);
-    if (!product) throw notFound();
-    return { product };
+  loader: async ({ params }) => {
+    const { data: product, error } = await supabase
+      .from("products")
+      .select(`
+        *,
+        product_images (image_url)
+      `)
+      .eq("id", params.id)
+      .single();
+
+    if (error || !product) throw notFound();
+
+    const formattedProduct = {
+      ...product,
+      images: product.product_images?.map((img: any) => img.image_url) || []
+    };
+
+    const { data: othersData } = await supabase
+      .from("products")
+      .select(`
+        *,
+        product_images (image_url)
+      `)
+      .neq("id", params.id)
+      .limit(3);
+
+    const formattedOthers = othersData?.map((p: any) => ({
+      ...p,
+      images: p.product_images?.map((img: any) => img.image_url) || []
+    })) || [];
+
+    return { product: formattedProduct, others: formattedOthers };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -30,11 +59,13 @@ export const Route = createFileRoute("/produit/$id")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product, others } = Route.useLoaderData();
   const { add } = useCart();
   const [added, setAdded] = useState(false);
 
-  const others = products.filter((p) => p.id !== product.id).slice(0, 3);
+  const displayImages = (product.images && product.images.length > 0)
+    ? product.images
+    : ["/logo.jpg"];
 
   const handleAdd = () => {
     add(product.id);
@@ -55,14 +86,18 @@ function ProductPage() {
         </Link>
 
         <div className="mt-8 grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="overflow-hidden ring-1 ring-border">
-            <img
-              src={product.image}
-              alt={product.name}
-              width={1024}
-              height={1280}
-              className="aspect-[4/5] w-full object-cover"
-            />
+          <div className="flex flex-col gap-4">
+            {displayImages.map((img: string, i: number) => (
+              <div key={i} className="overflow-hidden ring-1 ring-border rounded-lg shadow-sm">
+                <img
+                  src={img}
+                  alt={`${product.name} - vue ${i + 1}`}
+                  width={1024}
+                  height={1280}
+                  className="aspect-[4/5] w-full object-cover"
+                />
+              </div>
+            ))}
           </div>
 
           <div className="rise-in">
@@ -114,18 +149,13 @@ function ProductPage() {
                 )}
               </Button>
             </div>
-
-            <p className="mt-6 text-xs text-muted-foreground">
-              Livraison offerte dès 90 € · Retours sous 30 jours · Paiement
-              sécurisé
-            </p>
           </div>
         </div>
 
         <section className="mt-24">
           <h2 className="font-display text-3xl">Vous aimerez aussi</h2>
           <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {others.map((p) => (
+            {others.map((p: any) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

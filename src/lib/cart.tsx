@@ -5,7 +5,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products, type Product } from "@/data/products";
+import { type Product } from "@/data/products";
+import { supabase } from "./supabase";
 
 export type CartLine = { productId: string; qty: number };
 
@@ -27,6 +28,24 @@ const STORAGE_KEY = "kag-parfumerie-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [productsData, setProductsData] = useState<Product[]>([]);
+
+  // Fetch all products for the cart context to resolve them synchronously
+  useEffect(() => {
+    async function fetchProducts() {
+      const { data } = await supabase
+        .from("products")
+        .select(`*, product_images(image_url)`);
+      if (data) {
+        const formatted = data.map((p: any) => ({
+          ...p,
+          images: p.product_images?.map((i: any) => i.image_url) || []
+        }));
+        setProductsData(formatted);
+      }
+    }
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     try {
@@ -65,7 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clear = () => setLines([]);
 
   const productFor = (productId: string) =>
-    products.find((p) => p.id === productId);
+    productsData.find((p) => p.id === productId);
 
   const count = lines.reduce((sum, l) => sum + l.qty, 0);
   const total = lines.reduce((sum, l) => {

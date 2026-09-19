@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
 
+  const mainImage = (product.images && product.images.length > 0 && product.images[0])
+    ? product.images[0]
+    : "/logo.jpg";
+
   return (
     <article className="group">
       <Link
@@ -14,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
         className="relative block overflow-hidden bg-card ring-1 ring-border"
       >
         <img
-          src={product.image}
+          src={mainImage}
           alt={product.name}
           loading="lazy"
           width={1024}

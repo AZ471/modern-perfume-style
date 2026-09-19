@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { products } from "@/data/products";
+import { useState, useEffect } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { Header } from "@/components/Header";
 import hero from "@/assets/hero.jpg";
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoAsset from "@/assets/kag-parfumerie-logo.jpeg.asset.json";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,12 +29,40 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const filters = ["Tout", "Parfum Femme", "Parfum Homme", "Soin"] as const;
+const filters = ["Tout", "Parfum Femme", "Parfum Homme", "Soin", "Parfum Unisexe"] as const;
 
 function Index() {
-  const [filter, setFilter] = useState<(typeof filters)[number]>("Tout");
-  const visible =
-    filter === "Tout" ? products : products.filter((p) => p.category === filter);
+  const [filter, setFilter] = useState<string>("Tout");
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          product_images (image_url)
+        `)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        // Transform the data so it matches the expected Product format for the frontend
+        const formattedProducts = data.map((p: any) => {
+          const fetchedImgs = p.product_images?.map((img: any) => img.image_url) || [];
+          return {
+            ...p,
+            images: fetchedImgs.length > 0 ? fetchedImgs : ["/logo.jpg"]
+          };
+        });
+        setProducts(formattedProducts);
+      }
+      setLoading(false);
+    }
+    fetchProducts();
+  }, []);
+
+  const visible = filter === "Tout" ? products : products.filter((p) => p.category === filter);
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,7 +73,7 @@ function Index() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/10" />
         <div className="relative mx-auto flex min-h-[calc(100svh-8rem)] max-w-7xl items-center px-5 py-12 sm:min-h-[calc(100svh-5rem)] sm:py-16 lg:px-8">
           <div className="rise-in max-w-2xl">
-            <img src={logoAsset.url} alt="KAG Parfumerie" className="mb-8 size-32 rounded-full object-cover ring-1 ring-accent/50 sm:size-40" />
+            <img src="/logo.jpg" alt="KAG Parfumerie" className="mb-8 h-32 w-auto rounded-md object-contain sm:h-40" />
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">L’élégance en signature</p>
             <h1 className="mt-5 font-display text-5xl leading-none sm:text-6xl md:text-7xl">KAG Parfumerie</h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-primary-foreground/75 sm:text-lg">
@@ -89,11 +116,22 @@ function Index() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-900 border-t-transparent"></div>
+            </div>
+          ) : visible.length > 0 ? (
+            <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-gray-500">
+              Aucun produit trouvé dans cette catégorie.
+            </div>
+          )}
         </div>
       </section>
 
@@ -117,18 +155,18 @@ function Index() {
             {[
               {
                 icon: Truck,
-                title: "Livraison offerte",
-                text: "Dès 90 € d'achat, partout en France.",
+                title: "Livraison rapide",
+                text: "Expédition soigneuse de toutes vos commandes.",
               },
               {
                 icon: RotateCcw,
-                title: "Retours 30 jours",
-                text: "Satisfait ou remboursé, sans condition.",
+                title: "Satisfaction garantie",
+                text: "Une qualité et un soin d'exception assurés.",
               },
               {
                 icon: ShieldCheck,
                 title: "Paiement sécurisé",
-                text: "Vos données protégées, toujours.",
+                text: "Vos transactions et données protégées.",
               },
             ].map((f) => (
               <div
@@ -150,7 +188,7 @@ function Index() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-10 text-sm text-muted-foreground md:flex-row lg:px-8">
           <Link to="/" className="flex items-center gap-3 font-display text-xl text-foreground">
-            <img src={logoAsset.url} alt="" className="size-12 rounded-full object-cover" /> KAG Parfumerie
+            <img src="/logo.jpg" alt="KAG Parfumerie" className="h-10 w-auto rounded-md object-contain" /> 
           </Link>
           <p>Parfums · Soins · Élégance</p>
           <p>© 2026 KAG Parfumerie — Tous droits réservés</p>
