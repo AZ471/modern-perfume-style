@@ -14,7 +14,7 @@ type CartContextType = {
   lines: CartLine[];
   count: number;
   total: number;
-  add: (productId: string) => void;
+  add: (productId: string, quantity?: number) => void;
   remove: (productId: string) => void;
   setQty: (productId: string, qty: number) => void;
   clear: () => void;
@@ -61,14 +61,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
   }, [lines, hydrated]);
 
-  const add = (productId: string) =>
+  const add = (productId: string, quantity: number = 1) =>
     setLines((prev) => {
+      const q = Math.max(1, quantity);
       const existing = prev.find((l) => l.productId === productId);
       if (existing)
         return prev.map((l) =>
-          l.productId === productId ? { ...l, qty: l.qty + 1 } : l,
+          l.productId === productId ? { ...l, qty: l.qty + q } : l,
         );
-      return [...prev, { productId, qty: 1 }];
+      return [...prev, { productId, qty: q }];
     });
 
   const remove = (productId: string) =>
