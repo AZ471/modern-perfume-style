@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { formatPrice, type Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
+import { Button } from "@/components/ui/button";
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
@@ -10,7 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
       <Link
         to="/produit/$id"
         params={{ id: product.id }}
-        className="relative block overflow-hidden rounded-2xl bg-card ring-1 ring-border"
+        className="relative block overflow-hidden bg-card ring-1 ring-border"
       >
         <img
           src={product.image}
@@ -21,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
           className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {product.badge && (
-          <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-foreground">
+          <span className="absolute left-3 top-3 bg-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-foreground">
             {product.badge}
           </span>
         )}
@@ -46,12 +47,13 @@ export function ProductCard({ product }: { product: Product }) {
           {formatPrice(product.price)}
         </p>
       </div>
-      <button
+       <Button
+         variant="outline"
         onClick={() => add(product.id)}
-        className="mt-3 w-full rounded-full border border-foreground/20 py-2.5 text-sm font-semibold transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground"
+         className="mt-3 h-11 w-full rounded-none border-foreground/20 uppercase tracking-[0.12em] hover:border-primary hover:bg-primary hover:text-primary-foreground"
       >
         Ajouter au panier
-      </button>
+       </Button>
     </article>
   );
 }

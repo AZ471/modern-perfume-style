@@ -4,13 +4,14 @@ import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/data/products";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
     meta: [
-      { title: "Votre panier — NUREA" },
-      { name: "description", content: "Votre panier NUREA." },
-      { property: "og:title", content: "Votre panier — NUREA" },
+      { title: "Votre panier — KAG Parfumerie" },
+      { name: "description", content: "Votre panier KAG Parfumerie." },
+      { property: "og:title", content: "Votre panier — KAG Parfumerie" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -73,7 +74,7 @@ function CartPage() {
                 return (
                   <div
                     key={line.productId}
-                    className="flex gap-5 rounded-2xl bg-card p-4 ring-1 ring-border"
+                    className="flex gap-5 bg-card p-4 ring-1 ring-border"
                   >
                     <img
                       src={p.image}
@@ -93,33 +94,39 @@ function CartPage() {
                             {p.type} · {p.size}
                           </p>
                         </div>
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={() => remove(line.productId)}
                           className="text-muted-foreground transition-colors hover:text-destructive"
                           aria-label="Retirer"
                         >
                           <Trash2 className="size-4" />
-                        </button>
+                        </Button>
                       </div>
                       <div className="mt-auto flex items-center justify-between pt-3">
                         <div className="flex items-center gap-3 rounded-full border border-border px-2 py-1">
-                          <button
+                           <Button
+                             variant="ghost"
+                             size="icon"
                             onClick={() => setQty(line.productId, line.qty - 1)}
-                            className="grid size-6 place-items-center"
+                             className="size-6"
                             aria-label="Diminuer"
                           >
                             <Minus className="size-3.5" />
-                          </button>
+                           </Button>
                           <span className="w-4 text-center text-sm font-semibold">
                             {line.qty}
                           </span>
-                          <button
+                           <Button
+                             variant="ghost"
+                             size="icon"
                             onClick={() => setQty(line.productId, line.qty + 1)}
-                            className="grid size-6 place-items-center"
+                             className="size-6"
                             aria-label="Augmenter"
                           >
                             <Plus className="size-3.5" />
-                          </button>
+                           </Button>
                         </div>
                         <p className="font-display text-lg font-semibold">
                           {formatPrice(p.price * line.qty)}
@@ -131,7 +138,7 @@ function CartPage() {
               })}
             </div>
 
-            <aside className="h-fit rounded-2xl bg-card p-6 ring-1 ring-border">
+            <aside className="h-fit bg-card p-6 ring-1 ring-border">
               <h2 className="font-display text-2xl">Récapitulatif</h2>
               <dl className="mt-5 space-y-3 text-sm">
                 <div className="flex justify-between">
@@ -156,15 +163,15 @@ function CartPage() {
                   Plus que {formatPrice(90 - total)} pour la livraison offerte !
                 </p>
               )}
-              <button
+               <Button
                 onClick={() => {
                   setOrdered(true);
                   clear();
                 }}
-                className="mt-6 w-full rounded-full bg-primary py-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                 className="mt-6 h-12 w-full rounded-none uppercase tracking-[0.1em]"
               >
                 Passer commande
-              </button>
+               </Button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
                 Paiement sécurisé · Retours 30 jours
               </p>
