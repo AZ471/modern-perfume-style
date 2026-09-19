@@ -41,10 +41,10 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <section className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-primary text-primary-foreground">
+      <section className="relative min-h-[calc(100svh-8rem)] overflow-hidden bg-primary text-primary-foreground sm:min-h-[calc(100svh-5rem)]">
         <img src={hero} alt="Flacon de parfum KAG Parfumerie" className="absolute inset-0 h-full w-full object-cover opacity-55" />
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/10" />
-        <div className="relative mx-auto flex min-h-[calc(100svh-5rem)] max-w-7xl items-center px-5 py-16 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(100svh-8rem)] max-w-7xl items-center px-5 py-12 sm:min-h-[calc(100svh-5rem)] sm:py-16 lg:px-8">
           <div className="rise-in max-w-2xl">
             <img src={logoAsset.url} alt="KAG Parfumerie" className="mb-8 size-32 rounded-full object-cover ring-1 ring-accent/50 sm:size-40" />
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">L’élégance en signature</p>

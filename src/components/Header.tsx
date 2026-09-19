@@ -38,6 +38,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link
             to="/panier"
+            aria-label="Panier"
             className="relative inline-flex h-10 items-center gap-2 border border-accent/55 px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <ShoppingBag className="size-4" />
