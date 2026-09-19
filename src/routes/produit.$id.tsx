@@ -7,14 +7,12 @@ import {
   ArrowLeft,
   ShoppingBag,
   Check,
-  Star,
   Truck,
   ShieldCheck,
   Sparkles,
   Minus,
   Plus,
   Phone,
-  Gift,
   Clock,
   ChevronRight,
   Share2,
@@ -264,15 +262,7 @@ function ProductPage() {
                 <span>•</span>
                 <span>{product.size}</span>
                 <span>•</span>
-                <div className="flex items-center gap-1 text-amber-500 font-medium">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="size-3 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <span className="text-foreground font-semibold">4.9</span>
-                  <span className="text-muted-foreground">(28 avis)</span>
-                </div>
+                <span className="text-emerald-700 font-medium">Haute tenue & sillage raffiné</span>
               </div>
             </div>
 
@@ -394,7 +384,7 @@ function ProductPage() {
             </div>
 
             {/* Reassurance Grid */}
-            <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/80">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-border/80">
               <div className="flex items-start gap-2.5">
                 <Truck className="size-4 text-accent mt-0.5 shrink-0" />
                 <div>
@@ -414,13 +404,6 @@ function ProductPage() {
                 <div>
                   <p className="text-xs font-semibold text-foreground">100% Authentique</p>
                   <p className="text-[11px] text-muted-foreground">Composants d'exception</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <Gift className="size-4 text-accent mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Écrin KAG offert</p>
-                  <p className="text-[11px] text-muted-foreground">Prêt à être offert</p>
                 </div>
               </div>
             </div>
@@ -485,78 +468,7 @@ function ProductPage() {
           </div>
         </div>
 
-        {/* REVIEWS SECTION */}
-        <section className="mt-16 sm:mt-24 border-t border-border/80 pt-12">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent">
-                Témoignages & Avis
-              </p>
-              <h2 className="mt-1 font-display text-2xl sm:text-3xl font-semibold">
-                Ce que nos clients en disent
-              </h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="size-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <span className="text-sm font-bold">4.9 / 5</span>
-              <span className="text-xs text-muted-foreground">· 100% clients satisfaits</span>
-            </div>
-          </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              {
-                name: "Aïssatou D.",
-                city: "Dakar, Almadies",
-                rating: 5,
-                comment:
-                  "Une fragrance envoûtante avec une tenue exceptionnelle. Je reçois des compliments toute la journée. Livraison très rapide !",
-                date: "Il y a 3 jours",
-              },
-              {
-                name: "Mamadou S.",
-                city: "Dakar, Plateau",
-                rating: 5,
-                comment:
-                  "Très belle découverte. Le packaging est luxueux et le sillage est très raffiné sans être entêtant. Je recommande vivement.",
-                date: "Il y a 1 semaine",
-              },
-              {
-                name: "Fatou B.",
-                city: "Thiès",
-                rating: 5,
-                comment:
-                  "Reçu bien emballé en 48h à Thiès. Le parfum correspond parfaitement à la description. Service client très à l'écoute sur WhatsApp.",
-                date: "Il y a 2 semaines",
-              },
-            ].map((review, idx) => (
-              <div
-                key={idx}
-                className="rounded-md border border-border/70 bg-card p-4 shadow-xs"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <span className="text-[10px] text-muted-foreground">{review.date}</span>
-                </div>
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground italic">
-                  "{review.comment}"
-                </p>
-                <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-2 text-xs">
-                  <span className="font-semibold text-foreground">{review.name}</span>
-                  <span className="text-[11px] text-muted-foreground">{review.city}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* RELATED PRODUCTS SECTION */}
         {others && others.length > 0 && (
