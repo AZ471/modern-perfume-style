@@ -5,17 +5,19 @@ import { ProductCard } from "@/components/ProductCard";
 import { Header } from "@/components/Header";
 import hero from "@/assets/hero.jpg";
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import logoAsset from "@/assets/kag-parfumerie-logo.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NUREA — Maison de Haute Parfumerie" },
+      { title: "KAG Parfumerie — Parfums & soins d'exception" },
       {
         name: "description",
         content:
-          "NUREA — boutique de parfums et soins d'exception. Découvrez nos eaux de parfum, extraits et soins visage composés avec les plus belles matières premières.",
+          "KAG Parfumerie — une sélection raffinée de parfums et soins pour femme et homme.",
       },
-      { property: "og:title", content: "NUREA — Maison de Haute Parfumerie" },
+      { property: "og:title", content: "KAG Parfumerie — Parfums & soins d'exception" },
       {
         property: "og:description",
         content:
@@ -39,93 +41,51 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero */}
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
-        <div className="rise-in">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
-            Maison de haute parfumerie
-          </p>
-          <h1 className="mt-5 font-display text-5xl leading-[1.02] md:text-7xl">
-            L'art du parfum,
-            <br />
-            <em className="italic text-accent">à la française</em>
-          </h1>
-          <p className="mt-6 max-w-md leading-relaxed text-muted-foreground">
-            Des compositions rares, distillées lentement, pour une signature qui
-            traverse la peau. Parfums, extraits et soins d'exception.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <a
-              href="#collection"
-              className="rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              Découvrir la collection
-            </a>
-            <a
-              href="#maison"
-              className="text-sm font-semibold underline underline-offset-4 decoration-border hover:decoration-accent"
-            >
-              Notre maison
-            </a>
-          </div>
-          <div className="mt-12 flex items-center gap-8 text-sm text-muted-foreground">
-            <div>
-              <span className="font-display text-3xl text-foreground">24</span>
-              <br />
-              créations
+      <section className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-primary text-primary-foreground">
+        <img src={hero} alt="Flacon de parfum KAG Parfumerie" className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/10" />
+        <div className="relative mx-auto flex min-h-[calc(100svh-5rem)] max-w-7xl items-center px-5 py-16 lg:px-8">
+          <div className="rise-in max-w-2xl">
+            <img src={logoAsset.url} alt="KAG Parfumerie" className="mb-8 size-32 rounded-full object-cover ring-1 ring-accent/50 sm:size-40" />
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">L’élégance en signature</p>
+            <h1 className="mt-5 font-display text-5xl leading-none sm:text-6xl md:text-7xl">KAG Parfumerie</h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-primary-foreground/75 sm:text-lg">
+              Des parfums de caractère et des soins précieux, choisis pour révéler une présence qui ne ressemble qu’à vous.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Button asChild size="lg" className="h-12 rounded-none bg-accent px-7 uppercase tracking-[0.12em] text-accent-foreground hover:bg-accent/90">
+                <a href="#collection">Découvrir la collection</a>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-12 rounded-none border-primary-foreground/45 bg-transparent px-7 uppercase tracking-[0.12em] text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <a href="#maison">Notre univers</a>
+              </Button>
             </div>
-            <div className="h-10 w-px bg-border" />
-            <div>
-              <span className="font-display text-3xl text-foreground">100%</span>
-              <br />
-              fait en France
-            </div>
-            <div className="h-10 w-px bg-border" />
-            <div>
-              <span className="font-display text-3xl text-foreground">4,9</span>
-              <br />
-              avis clients
-            </div>
-          </div>
-        </div>
-        <div className="rise-in" style={{ animationDelay: "150ms" }}>
-          <div className="overflow-hidden rounded-3xl ring-1 ring-border">
-            <img
-              src={hero}
-              alt="Flacon de parfum NUREA"
-              width={1088}
-              height={1360}
-              className="aspect-[4/5] w-full object-cover"
-            />
           </div>
         </div>
       </section>
 
       {/* Collection */}
       <section id="collection" className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
           <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
                 La collection
               </p>
               <h2 className="mt-3 font-display text-4xl md:text-5xl">
-                Nos essences
+                La sélection KAG
               </h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {filters.map((f) => (
-                <button
+                <Button
+                  variant={f === filter ? "default" : "outline"}
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={
-                    f === filter
-                      ? "rounded-full bg-primary px-5 py-2 text-[13px] font-semibold text-primary-foreground"
-                      : "rounded-full border border-border px-5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
-                  }
+                  className="h-9 rounded-none px-5 text-[12px] uppercase tracking-[0.08em]"
                 >
                   {f}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -139,19 +99,18 @@ function Index() {
 
       {/* Maison */}
       <section id="maison" className="bg-primary text-primary-foreground">
-        <div className="mx-auto max-w-6xl px-5 py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
               La maison
             </p>
             <h2 className="mt-4 font-display text-4xl leading-tight md:text-5xl">
-              Composée à Grasse, pensée pour durer
+              Le parfum comme expression de soi
             </h2>
             <p className="mt-6 leading-relaxed text-primary-foreground/70">
-              Chaque flacon NUREA naît dans notre atelier de Grasse, berceau de
-              la parfumerie française. Nous travaillons en petites séries, avec
-              des matières premières sourcées avec exigence, pour des parfums
-              qui racontent une histoire sur votre peau.
+              KAG Parfumerie réunit des fragrances et des soins choisis avec exigence.
+              Une collection pensée pour chaque personnalité, chaque allure et
+              chaque moment précieux.
             </p>
           </div>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
@@ -174,7 +133,7 @@ function Index() {
             ].map((f) => (
               <div
                 key={f.title}
-                className="rounded-2xl border border-primary-foreground/15 p-6"
+                className="border border-primary-foreground/15 p-6"
               >
                 <f.icon className="size-6 text-accent" />
                 <h3 className="mt-4 font-display text-xl">{f.title}</h3>
@@ -190,11 +149,11 @@ function Index() {
       {/* Footer */}
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-10 text-sm text-muted-foreground md:flex-row lg:px-8">
-          <Link to="/" className="font-display text-2xl text-foreground">
-            NUREA
+          <Link to="/" className="flex items-center gap-3 font-display text-xl text-foreground">
+            <img src={logoAsset.url} alt="" className="size-12 rounded-full object-cover" /> KAG Parfumerie
           </Link>
-          <p>Haute parfumerie · Grasse, France</p>
-          <p>© 2026 NUREA — Tous droits réservés</p>
+          <p>Parfums · Soins · Élégance</p>
+          <p>© 2026 KAG Parfumerie — Tous droits réservés</p>
         </div>
       </footer>
     </div>

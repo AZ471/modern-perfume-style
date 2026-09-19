@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { useCart } from "@/lib/cart";
 import { ArrowLeft, ShoppingBag, Check } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/produit/$id")({
   loader: ({ params }) => {
@@ -14,9 +15,9 @@ export const Route = createFileRoute("/produit/$id")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.product.name} — NUREA` },
+      { title: `${loaderData?.product.name} — KAG Parfumerie` },
       { name: "description", content: loaderData?.product.description ?? "" },
-      { property: "og:title", content: `${loaderData?.product.name} — NUREA` },
+      { property: "og:title", content: `${loaderData?.product.name} — KAG Parfumerie` },
       {
         property: "og:description",
         content: loaderData?.product.description ?? "",
@@ -45,7 +46,7 @@ function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="mx-auto max-w-6xl px-5 py-10 lg:px-8 lg:py-16">
+      <main className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-16">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -54,7 +55,7 @@ function ProductPage() {
         </Link>
 
         <div className="mt-8 grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="overflow-hidden rounded-3xl ring-1 ring-border">
+          <div className="overflow-hidden ring-1 ring-border">
             <img
               src={product.image}
               alt={product.name}
@@ -98,9 +99,9 @@ function ProductPage() {
               <span className="font-display text-4xl font-semibold">
                 {formatPrice(product.price)}
               </span>
-              <button
+              <Button
                 onClick={handleAdd}
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                className="h-12 rounded-none px-8 uppercase tracking-[0.1em]"
               >
                 {added ? (
                   <>
@@ -111,7 +112,7 @@ function ProductPage() {
                     <ShoppingBag className="size-4" /> Ajouter au panier
                   </>
                 )}
-              </button>
+              </Button>
             </div>
 
             <p className="mt-6 text-xs text-muted-foreground">
