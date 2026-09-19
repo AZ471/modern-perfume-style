@@ -78,28 +78,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NUREA — Maison de Haute Parfumerie" },
+      { title: "KAG Parfumerie — Parfums & soins d'exception" },
       {
         name: "description",
         content:
-          "NUREA — boutique de parfums et soins d'exception, composés en France.",
+          "KAG Parfumerie — parfums et soins d'exception sélectionnés avec exigence.",
       },
-      { property: "og:title", content: "NUREA — Maison de Haute Parfumerie" },
+      { property: "og:title", content: "KAG Parfumerie — Parfums & soins d'exception" },
       {
         property: "og:description",
         content:
-          "NUREA — boutique de parfums et soins d'exception, composés en France.",
+          "KAG Parfumerie — parfums et soins d'exception sélectionnés avec exigence.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -116,7 +115,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
