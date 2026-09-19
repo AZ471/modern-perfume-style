@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { createOrder } from "@/lib/orders";
+import { getOptimizedImageUrl } from "@/lib/images";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
@@ -157,11 +158,12 @@ function CartPage() {
                     className="flex gap-5 bg-card p-4 ring-1 ring-border rounded-lg shadow-sm"
                   >
                     <img
-                      src={img}
+                      src={getOptimizedImageUrl(img, { width: 200, quality: 75 })}
                       alt={p.name}
-                      width={1024}
-                      height={1280}
+                      width={96}
+                      height={96}
                       loading="lazy"
+                      decoding="async"
                       className="size-24 rounded-lg object-cover"
                     />
                     <div className="flex flex-1 flex-col">

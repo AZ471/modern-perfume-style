@@ -6,8 +6,33 @@ import hero from "@/assets/hero.jpg";
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { defaultProducts } from "@/data/products";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    try {
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          product_images (image_url)
+        `)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        return data.map((p: any) => {
+          const fetchedImgs = p.product_images?.map((img: any) => img.image_url) || [];
+          return {
+            ...p,
+            images: fetchedImgs.length > 0 ? fetchedImgs : ["/logo.jpg"],
+          };
+        });
+      }
+    } catch (err) {
+      console.warn("SSR loader fetch error, using default products:", err);
+    }
+    return defaultProducts;
+  },
   head: () => ({
     meta: [
       { title: "KAG Parfumerie — Parfums & soins d'exception" },
@@ -32,34 +57,38 @@ export const Route = createFileRoute("/")({
 const filters = ["Tout", "Parfum Femme", "Parfum Homme", "Soin", "Parfum Unisexe"] as const;
 
 function Index() {
+  const loaderProducts = Route.useLoaderData();
   const [filter, setFilter] = useState<string>("Tout");
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<any[]>(loaderProducts || defaultProducts);
+  const [loading, setLoading] = useState(false);
 
+  // Background refresh to pick up fresh inventory smoothly without blocking UI
   useEffect(() => {
-    async function fetchProducts() {
-      const { data, error } = await supabase
-        .from("products")
-        .select(`
-          *,
-          product_images (image_url)
-        `)
-        .order("created_at", { ascending: false });
+    async function refreshProducts() {
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select(`
+            *,
+            product_images (image_url)
+          `)
+          .order("created_at", { ascending: false });
 
-      if (!error && data) {
-        // Transform the data so it matches the expected Product format for the frontend
-        const formattedProducts = data.map((p: any) => {
-          const fetchedImgs = p.product_images?.map((img: any) => img.image_url) || [];
-          return {
-            ...p,
-            images: fetchedImgs.length > 0 ? fetchedImgs : ["/logo.jpg"]
-          };
-        });
-        setProducts(formattedProducts);
+        if (!error && data && data.length > 0) {
+          const formattedProducts = data.map((p: any) => {
+            const fetchedImgs = p.product_images?.map((img: any) => img.image_url) || [];
+            return {
+              ...p,
+              images: fetchedImgs.length > 0 ? fetchedImgs : ["/logo.jpg"],
+            };
+          });
+          setProducts(formattedProducts);
+        }
+      } catch (err) {
+        console.warn("Background refresh warning:", err);
       }
-      setLoading(false);
     }
-    fetchProducts();
+    refreshProducts();
   }, []);
 
   const visible = filter === "Tout" ? products : products.filter((p) => p.category === filter);
@@ -69,11 +98,27 @@ function Index() {
       <Header />
 
       <section className="relative min-h-[calc(100svh-8rem)] overflow-hidden bg-primary text-primary-foreground sm:min-h-[calc(100svh-5rem)]">
-        <img src={hero} alt="Flacon de parfum KAG Parfumerie" className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        <img
+          src={hero}
+          alt="Flacon de parfum KAG Parfumerie"
+          fetchPriority="high"
+          decoding="async"
+          width={1400}
+          height={900}
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/10" />
         <div className="relative mx-auto flex min-h-[calc(100svh-8rem)] max-w-7xl items-center px-5 py-12 sm:min-h-[calc(100svh-5rem)] sm:py-16 lg:px-8">
           <div className="rise-in max-w-2xl">
-            <img src="/logo.jpg" alt="KAG Parfumerie" className="mb-8 h-32 w-auto rounded-md object-contain sm:h-40" />
+            <img
+              src="/logo.jpg"
+              alt="KAG Parfumerie"
+              fetchPriority="high"
+              decoding="async"
+              width={320}
+              height={160}
+              className="mb-8 h-32 w-auto rounded-md object-contain sm:h-40"
+            />
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">L’élégance en signature</p>
             <h1 className="mt-5 font-display text-5xl leading-none sm:text-6xl md:text-7xl">KAG Parfumerie</h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-primary-foreground/75 sm:text-lg">
@@ -123,8 +168,8 @@ function Index() {
             </div>
           ) : visible.length > 0 ? (
             <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-              {visible.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {visible.map((p, index) => (
+                <ProductCard key={p.id} product={p} priority={index < 2} />
               ))}
             </div>
           ) : (

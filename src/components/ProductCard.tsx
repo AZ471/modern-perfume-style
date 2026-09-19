@@ -2,13 +2,22 @@ import { Link } from "@tanstack/react-router";
 import { formatPrice, type Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
+import { getOptimizedImageUrl } from "@/lib/images";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: Product;
+  priority?: boolean;
+}) {
   const { add } = useCart();
 
-  const mainImage = (product.images && product.images.length > 0 && product.images[0])
+  const rawImage = (product.images && product.images.length > 0 && product.images[0])
     ? product.images[0]
     : "/logo.jpg";
+
+  const optimizedSrc = getOptimizedImageUrl(rawImage, { width: 500, quality: 75 });
 
   return (
     <article className="group">
@@ -18,11 +27,12 @@ export function ProductCard({ product }: { product: Product }) {
         className="relative block overflow-hidden bg-card ring-1 ring-border"
       >
         <img
-          src={mainImage}
+          src={optimizedSrc}
           alt={product.name}
-          loading="lazy"
-          width={1024}
-          height={1280}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          width={500}
+          height={625}
           className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {product.badge && (

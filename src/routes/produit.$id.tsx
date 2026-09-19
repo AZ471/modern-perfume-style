@@ -7,6 +7,7 @@ import { ArrowLeft, ShoppingBag, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { getOptimizedImageUrl } from "@/lib/images";
 
 export const Route = createFileRoute("/produit/$id")({
   loader: async ({ params }) => {
@@ -90,10 +91,13 @@ function ProductPage() {
             {displayImages.map((img: string, i: number) => (
               <div key={i} className="overflow-hidden ring-1 ring-border rounded-lg shadow-sm">
                 <img
-                  src={img}
+                  src={getOptimizedImageUrl(img, { width: 800, quality: 80 })}
                   alt={`${product.name} - vue ${i + 1}`}
-                  width={1024}
-                  height={1280}
+                  width={800}
+                  height={1000}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  decoding="async"
                   className="aspect-[4/5] w-full object-cover"
                 />
               </div>

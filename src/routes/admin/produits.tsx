@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { getOptimizedImageUrl } from "@/lib/images";
 
 export const Route = createFileRoute("/admin/produits")({
   component: AdminProducts,
@@ -77,8 +78,12 @@ function AdminProducts() {
                         {product.product_images?.map((img: any, i: number) => (
                           <img
                             key={i}
-                            src={img.image_url}
+                            src={getOptimizedImageUrl(img.image_url, { width: 100, quality: 70 })}
                             alt=""
+                            width={40}
+                            height={40}
+                            loading="lazy"
+                            decoding="async"
                             className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm"
                           />
                         ))}

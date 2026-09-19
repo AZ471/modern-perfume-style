@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Plus, X, Upload, Image as ImageIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { compressImageFile } from "@/lib/images";
 
 export const Route = createFileRoute("/admin/nouveau-produit")({
   component: NouveauProduit,
@@ -74,15 +75,17 @@ function NouveauProduit() {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Upload image file to Supabase Storage or fallback to Data URL
-  const uploadImageFile = async (file: File, productId: string, index: number): Promise<string> => {
+  // Upload image file to Supabase Storage (with automatic compression) or fallback to Data URL
+  const uploadImageFile = async (rawFile: File, productId: string, index: number): Promise<string> => {
     try {
+      // Compress in browser before network transfer (converts 10MB camera shots to ~100KB)
+      const file = await compressImageFile(rawFile);
       const fileExt = file.name.split(".").pop() || "jpg";
       const filePath = `${productId}/${Date.now()}_${index}.${fileExt}`;
       
       const { error: uploadError } = await supabase.storage
         .from("products")
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, file, { upsert: true, contentType: file.type || "image/jpeg" });
 
       if (!uploadError) {
         const { data } = supabase.storage.from("products").getPublicUrl(filePath);
@@ -92,7 +95,8 @@ function NouveauProduit() {
       console.warn("Storage upload warning, fallback to Data URL:", err);
     }
 
-    return await readFileAsDataURL(file);
+    const compressed = await compressImageFile(rawFile);
+    return await readFileAsDataURL(compressed);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
